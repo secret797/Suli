@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Futuristic Game System</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    color: white;
+    text-align: center;
+    background: url("bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* UI PANEL */
+.panel {
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    border: 2px solid #a020f0;
+    box-shadow: 0 0 20px purple;
+    margin: 20px auto;
+    width: 320px;
+    border-radius: 15px;
+}
+
+button {
+    background: transparent;
+    border: 2px solid #ff00ff;
+    color: #ff00ff;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff00ff;
+}
+
+button:hover {
+    background: #ff00ff;
+    color: black;
+}
+
+#gameArea {
+    margin-top: 20px;
+    position: relative;
+    height: 400px;
+}
+
+/* EGG HUNT */
+.egg {
+    position: absolute;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.egg:hover {
+    transform: scale(1.3);
+}
+
+/* BASKET */
+#basketGame {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: auto;
+    border: 2px solid purple;
+}
+
+#ball {
+    width: 40px;
+    height: 40px;
+    background: orange;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 10px;
+    left: 130px;
+    cursor: pointer;
+}
+
+#hoop {
+    width: 80px;
+    height: 10px;
+    background: red;
+    position: absolute;
+    top: 50px;
+    left: 110px;
+}
+
+/* CREDITS */
+.credits {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff;
+    z-index: 9999;
+}
+
+.credits img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #ff00ff;
+    border: 2px solid #ff00ff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="panel">
+    <h2>⚡ Futuristic System</h2>
+    <h3>Points: <span id="points">0</span></h3>
+
+    <button onclick="startEggHunt()">🥚 Egg Hunt</button>
+    <button id="basketBtn" onclick="startBasket()" disabled>🏀 Basketball</button>
+    <br>
+    <button id="unlockBtn" onclick="unlock()" style="display:none;">🔓 Unlock</button>
+
+    <h4 id="link"></h4>
+</div>
+
+<div id="gameArea"></div>
+
+<!-- CREDITS -->
+<div class="credits">
+    <span>Credits: suli</span>
+    <img src="https://drive.google.com/uc?export=view&id=1DZpxvSNDa8qqPhTiUT-cKf_VC-Uk5Pe9">
+</div>
+
+<script>
+let points = 0;
+let eggDone = false;
+
+/* -------- EGG HUNT -------- */
+function startEggHunt() {
+    gameArea.innerHTML = "<p>Find all the eggs! 🥚</p>";
+
+    let found = 0;
+    let total = 5;
+
+    for (let i = 0; i < total; i++) {
+        let egg = document.createElement("div");
+        egg.className = "egg";
+        egg.innerText = "🥚";
+
+        egg.style.left = Math.random() * 90 + "%";
+        egg.style.top = Math.random() * 80 + "%";
+
+        egg.onclick = () => {
+            egg.remove();
+            found++;
+
+            if (found === total) {
+                alert("You found all eggs! 🏆");
+                points += 50;
+                updatePoints();
+                eggDone = true;
+                document.getElementById("basketBtn").disabled = false;
+            }
+        };
+
+        gameArea.appendChild(egg);
+    }
+}
+
+/* -------- BASKETBALL -------- */
+function startBasket() {
+    if (!eggDone) return;
+
+    gameArea.innerHTML = `
+    <div id="basketGame">
+        <div id="hoop"></div>
+        <div id="ball"></div>
+    </div>
+    <p>Click the ball to shoot!</p>
+    `;
+
+    let ball = document.getElementById("ball");
+
+    ball.onclick = () => {
+        let success = Math.random() > 0.4;
+
+        ball.style.bottom = "300px";
+
+        setTimeout(() => {
+            if (success) {
+                alert("SCORE! 🏀🔥");
+                points += 50;
+                updatePoints();
+            } else {
+                alert("Miss 😢");
+            }
+
+            ball.style.bottom = "10px";
+        }, 500);
+    };
+}
+
+/* -------- SYSTEM -------- */
+function updatePoints() {
+    document.getElementById("points").innerText = points;
+
+    if (points >= 100) {
+        document.getElementById("unlockBtn").style.display = "inline-block";
+    }
+}
+
+function unlock() {
+    document.getElementById("link").innerText =
+        "Link: test link (coming soon)";
+}
+</script>
+
+</body>
+</html>
